@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Training_Managment_System.Entities;
 
 namespace Project_Final_ITI.Models
 {
@@ -15,11 +14,13 @@ namespace Project_Final_ITI.Models
         public string Category { get; set; }
 
         [Required]
-        public int UserId { get; set; } // InstructorId
+        public int InstructorID { get; set; } // InstructorId
+
+        // Navigation Properties
 
 
-        public User Instructor { get; set; }
+        public User User { get; set; }
         public ICollection<Session> Sessions { get; set; }
-        public ICollection<StdEnrollsIn> Enrollments { get; set; }
+        public ICollection<Enrollment> Enrollments { get; set; }
     }
 }

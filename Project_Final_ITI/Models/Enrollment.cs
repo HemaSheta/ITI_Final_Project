@@ -3,13 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project_Final_ITI.Models
 {
-    public class StdEnrollsIn
+    public class Enrollment
     {
         
-        public int UserId { get; set; }
+        public int StudentId { get; set; }
 
        
         public int CourseId { get; set; }
+
+        // Navigation Properties
 
         public User User { get; set; }
         public Course Course { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Training_Managment_System.Entities;
+
 using Project_Final_ITI.Data; 
 
 namespace Project_Final_ITI.Models
@@ -20,9 +20,9 @@ namespace Project_Final_ITI.Models
         public string Role { get; set; }
 
         // Navigation Properties
-        public ICollection<Course> Courses { get; set; }
-        public ICollection<StdEnrollsIn> Enrollments { get; set; }
-        public ICollection<Attends> Attendances { get; set; }
-        public ICollection<StdHasGrade> Grades { get; set; }
+        public ICollection<Course> Courses { get; set; }          // instructor
+        public ICollection<Enrollment> Enrollments { get; set; }
+        
+        public ICollection<Grade> Grades { get; set; }            // trainee
     }
 }

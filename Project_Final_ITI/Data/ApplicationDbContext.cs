@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Project_Final_ITI.Models; 
+using Project_Final_ITI.Models;
 
 namespace Project_Final_ITI.Data
 {
@@ -14,72 +14,57 @@ namespace Project_Final_ITI.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Grade> Grades { get; set; }
-        public DbSet<Attends> Attendances { get; set; }
-        public DbSet<StdHasGrade> StdHasGrades { get; set; }
-        public DbSet<StdEnrollsIn> StdEnrollments { get; set; }
+
+        public DbSet<Enrollment> Enrollments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Composite key for Attends
-            // Attends
-            modelBuilder.Entity<Attends>()
-                .HasKey(a => new { a.UserId, a.SessionId });
-
-            modelBuilder.Entity<Attends>()
-                .HasOne(a => a.User)
-                .WithMany(u => u.Attendances)
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Restrict); 
-            modelBuilder.Entity<Attends>()
-                .HasOne(a => a.Session)
-                .WithMany(s => s.Attendances)
-                .HasForeignKey(a => a.SessionId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            modelBuilder.Entity<StdEnrollsIn>()
-                .HasKey(se => new { se.UserId, se.CourseId });
-
-            modelBuilder.Entity<StdEnrollsIn>()
-                .HasOne(se => se.User)
-                .WithMany(u => u.Enrollments)
-                .HasForeignKey(se => se.UserId)
-                .OnDelete(DeleteBehavior.Restrict); 
-
-            modelBuilder.Entity<StdEnrollsIn>()
-                .HasOne(se => se.Course)
-                .WithMany(c => c.Enrollments)
-                .HasForeignKey(se => se.CourseId)
-                .OnDelete(DeleteBehavior.Restrict);
-            // Composite key for StdHasGrade
-            modelBuilder.Entity<StdHasGrade>()
-    .HasKey(sg => new { sg.UserId, sg.SessionId });
-
-            modelBuilder.Entity<StdHasGrade>()
-                .HasOne(sg => sg.User)
-                .WithMany(u => u.Grades)
-                .HasForeignKey(sg => sg.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<StdHasGrade>()
-                .HasOne(sg => sg.Session)
-                .WithMany(s => s.Grades)
-                .HasForeignKey(sg => sg.SessionId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // User - Course (Instructor)
             modelBuilder.Entity<Course>()
-    .HasOne(c => c.Instructor)
-    .WithMany(u => u.Courses)
-    .HasForeignKey(c => c.UserId)
-    .OnDelete(DeleteBehavior.Restrict); 
+                .HasOne(c => c.User)
+                .WithMany(u => u.Courses)
+                .HasForeignKey(c => c.InstructorID)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
+            // Enrollment (Many-to-Many: Student - Course)
+            modelBuilder.Entity<Enrollment>()
+                .HasKey(e => new { e.StudentId, e.CourseId });
+
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.User)
+                .WithMany(u => u.Enrollments)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Course - Session
             modelBuilder.Entity<Session>()
                 .HasOne(s => s.Course)
                 .WithMany(c => c.Sessions)
                 .HasForeignKey(s => s.CourseId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Session - Grade
+            modelBuilder.Entity<Grade>()
+                .HasOne(g => g.Session)
+                .WithMany(s => s.Grades)
+                .HasForeignKey(g => g.SessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // User (Trainee) - Grade
+            modelBuilder.Entity<Grade>()
+                .HasOne(g => g.User)
+                .WithMany(u => u.Grades)
+                .HasForeignKey(g => g.TraineeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
-
 
     }
 }

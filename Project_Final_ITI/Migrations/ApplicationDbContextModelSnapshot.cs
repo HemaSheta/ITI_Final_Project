@@ -22,21 +22,6 @@ namespace Training_Managment_System.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Project_Final_ITI.Models.Attends", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "SessionId");
-
-                    b.HasIndex("SessionId");
-
-                    b.ToTable("Attendances");
-                });
-
             modelBuilder.Entity("Project_Final_ITI.Models.Course", b =>
                 {
                     b.Property<int>("CourseId")
@@ -54,14 +39,29 @@ namespace Training_Managment_System.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("InstructorID")
                         .HasColumnType("int");
 
                     b.HasKey("CourseId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("InstructorID");
 
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("Project_Final_ITI.Models.Enrollment", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Enrollments");
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Grade", b =>
@@ -72,10 +72,20 @@ namespace Training_Managment_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GradeId"));
 
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TraineeId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Value")
                         .HasColumnType("float");
 
                     b.HasKey("GradeId");
+
+                    b.HasIndex("SessionId");
+
+                    b.HasIndex("TraineeId");
 
                     b.ToTable("Grades");
                 });
@@ -104,41 +114,6 @@ namespace Training_Managment_System.Migrations
                     b.ToTable("Sessions");
                 });
 
-            modelBuilder.Entity("Project_Final_ITI.Models.StdEnrollsIn", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("StdEnrollments");
-                });
-
-            modelBuilder.Entity("Project_Final_ITI.Models.StdHasGrade", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GradeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "SessionId");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("SessionId");
-
-                    b.ToTable("StdHasGrades");
-                });
-
             modelBuilder.Entity("Project_Final_ITI.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -165,34 +140,53 @@ namespace Training_Managment_System.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Project_Final_ITI.Models.Attends", b =>
+            modelBuilder.Entity("Project_Final_ITI.Models.Course", b =>
                 {
-                    b.HasOne("Project_Final_ITI.Models.Session", "Session")
-                        .WithMany("Attendances")
-                        .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Project_Final_ITI.Models.User", "User")
+                        .WithMany("Courses")
+                        .HasForeignKey("InstructorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Project_Final_ITI.Models.Enrollment", b =>
+                {
+                    b.HasOne("Project_Final_ITI.Models.Course", "Course")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Project_Final_ITI.Models.User", "User")
-                        .WithMany("Attendances")
-                        .HasForeignKey("UserId")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Project_Final_ITI.Models.Grade", b =>
+                {
+                    b.HasOne("Project_Final_ITI.Models.Session", "Session")
+                        .WithMany("Grades")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Project_Final_ITI.Models.User", "User")
+                        .WithMany("Grades")
+                        .HasForeignKey("TraineeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Session");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Project_Final_ITI.Models.Course", b =>
-                {
-                    b.HasOne("Project_Final_ITI.Models.User", "Instructor")
-                        .WithMany("Courses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Session", b =>
@@ -200,56 +194,10 @@ namespace Training_Managment_System.Migrations
                     b.HasOne("Project_Final_ITI.Models.Course", "Course")
                         .WithMany("Sessions")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("Project_Final_ITI.Models.StdEnrollsIn", b =>
-                {
-                    b.HasOne("Project_Final_ITI.Models.Course", "Course")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Project_Final_ITI.Models.User", "User")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Project_Final_ITI.Models.StdHasGrade", b =>
-                {
-                    b.HasOne("Project_Final_ITI.Models.Grade", "Grade")
-                        .WithMany("StudentGrades")
-                        .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Project_Final_ITI.Models.Session", "Session")
-                        .WithMany("Grades")
-                        .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Project_Final_ITI.Models.User", "User")
-                        .WithMany("Grades")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Grade");
-
-                    b.Navigation("Session");
-
-                    b.Navigation("User");
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Course", b =>
@@ -259,22 +207,13 @@ namespace Training_Managment_System.Migrations
                     b.Navigation("Sessions");
                 });
 
-            modelBuilder.Entity("Project_Final_ITI.Models.Grade", b =>
-                {
-                    b.Navigation("StudentGrades");
-                });
-
             modelBuilder.Entity("Project_Final_ITI.Models.Session", b =>
                 {
-                    b.Navigation("Attendances");
-
                     b.Navigation("Grades");
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.User", b =>
                 {
-                    b.Navigation("Attendances");
-
                     b.Navigation("Courses");
 
                     b.Navigation("Enrollments");

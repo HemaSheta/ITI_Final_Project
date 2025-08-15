@@ -18,8 +18,8 @@ namespace Project_Final_ITI.Models
         public int CourseId { get; set; }
 
         public Course Course { get; set; }
-        public ICollection<Attends> Attendances { get; set; }
-        public ICollection<StdHasGrade> Grades { get; set; }
+        public ICollection<Grade> Grades { get; set; } // Trainee grades for this session
+
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

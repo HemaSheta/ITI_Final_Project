@@ -1,4 +1,4 @@
-﻿using Training_Managment_System.Entities;
+﻿using Project_Final_ITI.Models;
 
 namespace Training_Managment_System.Repositories.Interfaces
 {
