@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Training_Managment_System.Entities;
 
-namespace TrainingSystem.Models
+namespace Project_Final_ITI.Models
 {
     public class Course
     {

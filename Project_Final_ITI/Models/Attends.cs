@@ -2,14 +2,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Training_Managment_System.Entities;
 
-namespace TrainingSystem.Models
+namespace Project_Final_ITI.Models
 {
     public class Attends
     {
-        [Key, Column(Order = 0)]
+        
         public int UserId { get; set; }
 
-        [Key, Column(Order = 1)]
+       
         public int SessionId { get; set; }
 
         // Navigation Properties

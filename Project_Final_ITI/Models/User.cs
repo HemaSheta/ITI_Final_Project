@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Training_Managment_System.Entities;
+using Project_Final_ITI.Data; 
 
-namespace TrainingSystem.Models
+namespace Project_Final_ITI.Models
 {
     public class User
     {

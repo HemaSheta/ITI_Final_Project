@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace TrainingSystem.Models
+namespace Project_Final_ITI.Models
 {
     public class Session : IValidatableObject
     {

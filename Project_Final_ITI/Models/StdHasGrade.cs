@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TrainingSystem.Models
+namespace Project_Final_ITI.Models
 {
     public class StdHasGrade
     {
-        [Key, Column(Order = 0)]
         public int UserId { get; set; }
 
-        [Key, Column(Order = 1)]
         public int SessionId { get; set; }
 
         public int GradeId { get; set; }

@@ -1,4 +1,8 @@
+using Project_Final_ITI.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Project_Final_ITI
+
 {
     public class Program
     {
@@ -8,6 +12,8 @@ namespace Project_Final_ITI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
@@ -24,11 +30,10 @@ namespace Project_Final_ITI
 
             app.UseAuthorization();
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+                
 
             app.Run();
         }
