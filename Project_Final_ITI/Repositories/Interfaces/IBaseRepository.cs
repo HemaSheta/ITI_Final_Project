@@ -10,8 +10,8 @@ namespace Training_Managment_System.Repositories.Interfaces
         void Update(T entity);
         
         Task<T?> GetById(int  id);
-        Task<IEnumerable<T>?> GetAll();
-        Task<IEnumerable<T>?> Find(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
 
     }
 }

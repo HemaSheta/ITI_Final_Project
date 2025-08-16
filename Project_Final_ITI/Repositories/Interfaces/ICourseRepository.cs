@@ -6,6 +6,8 @@ namespace Training_Managment_System.Repositories.Interfaces
     {
 
         //Task<Course> Search(String? name ,string? category) { }
+
         
+
     }
 }
