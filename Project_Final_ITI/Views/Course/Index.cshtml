@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Project_Final_ITI.Models.Course>
+
+@{
+    ViewData["Title"] = "Courses";
+}
+
+
+<h2>All Courses</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Course Name</th>
+            <th>Category</th>
+            <th>Instructor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td>@course.CourseName</td>
+                <td>@course.Category</td>
+                <td>@course.InstructorID</td>
+                <td><a class="btn btn-success" asp-controller="Course" asp-action="Edit" asp-route-id="@course.CourseId">Edit</a></td>
+                <td>
+                    <form asp-action="DeleteConfirmed" asp-controller="Course" asp-route-id="@course.CourseId" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

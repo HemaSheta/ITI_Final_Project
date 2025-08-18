@@ -64,7 +64,20 @@ namespace Project_Final_ITI.Data
                 .WithMany(u => u.Grades)
                 .HasForeignKey(g => g.TraineeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>().HasData(
+            new User{UserId = 1,UserName = "Dr. Ahmed",Email = "ahmed@iti.com",Role = "Instructor"},
+            new User{UserId = 2,UserName = "Sara Ali",Email = "sara@student.com",Role = "Trainee"});
+
+            
+            modelBuilder.Entity<Course>().HasData(
+            new Course{CourseId = 1,CourseName = "C# Programming",Category = "Programming",InstructorID = 1});
+
+            modelBuilder.Entity<Enrollment>().HasData(
+            new Enrollment{StudentId = 2, CourseId = 1  });
         }
 
     }
+
 }
+

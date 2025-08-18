@@ -14,13 +14,17 @@ namespace Training_Managment_System.Repositories.Implementations
         }
         public async Task Add(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            
+                await _context.Set<T>().AddAsync(entity);
+                await _context.SaveChangesAsync();
+           
         }
 
 
         public Task Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
+            _context.SaveChangesAsync();
             return Task.CompletedTask;
         }
 

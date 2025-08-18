@@ -2,6 +2,7 @@ using Project_Final_ITI.Data;
 using Microsoft.EntityFrameworkCore;
 using Training_Managment_System.Repositories.Interfaces;
 using Training_Managment_System.Repositories.Implementations;
+using Project_Final_ITI.Models;
 
 namespace Project_Final_ITI
 
@@ -14,9 +15,11 @@ namespace Project_Final_ITI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
             var app = builder.Build();
 

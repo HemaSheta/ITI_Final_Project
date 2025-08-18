@@ -9,12 +9,12 @@ namespace Training_Managment_System.Controllers
     public class CourseController : Controller
     {
         private readonly ICourseRepository _courseRepo;
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public CourseController(ICourseRepository courseRepo, ApplicationDbContext context)
+        public CourseController(ICourseRepository courseRepo)
         {
             _courseRepo = courseRepo;
-            _context = context;
+            //_context = context;
         }
 
 
@@ -44,13 +44,15 @@ namespace Training_Managment_System.Controllers
         // POST: Course/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Create(Course course)
         {
             if (ModelState.IsValid)
             {
+
                 await _courseRepo.Add(course);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
             }
             return View(course);
         }
@@ -73,7 +75,7 @@ namespace Training_Managment_System.Controllers
             if (ModelState.IsValid)
             {
                 _courseRepo.Update(course);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(course);
@@ -90,7 +92,7 @@ namespace Training_Managment_System.Controllers
         }
 
         // POST: Course/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -98,7 +100,7 @@ namespace Training_Managment_System.Controllers
             if (course != null)
             {
                 await _courseRepo.Delete(course);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
