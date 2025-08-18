@@ -32,6 +32,9 @@ namespace Project_Final_ITI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();  
+
             app.UseRouting();
 
             app.UseAuthorization();
