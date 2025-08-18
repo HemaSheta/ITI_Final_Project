@@ -1,0 +1,14 @@
+﻿@model Project_Final_ITI.Models.User
+
+<h2>Delete User</h2>
+
+<div>
+    <h4>Are you sure you want to delete this user?</h4>
+    <p><strong>@Model.UserName</strong> - @Model.Email (@Model.Role)</p>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,47 @@
+﻿@model List<Project_Final_ITI.Models.User>
+
+<h2>User Management</h2>
+
+<form method="get" asp-action="Index" class="d-flex mb-3">
+    <!-- Search by name -->
+    <input type="text" name="name" value="@ViewBag.CurrentName"
+           placeholder="Search by name..." 
+           class="form-control me-2" style="width:200px;" />
+
+    <!-- Filter by role -->
+    <select name="role" class="form-control me-2" style="width:110px;">
+        <option value="All">--All Roles--</option>
+        <option value="Admin">Admin</option>
+        <option value="Instructor">Instructor</option>
+        <option value="Trainee">Trainee</option>
+    </select>
+
+    <!-- Buttons -->
+    <button type="submit" class="btn btn-sm btn-outline-success me-2">Search</button>
+    <a asp-action="Add" class="btn btn-sm btn-outline-primary">Add User</a>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var User in Model)
+        {
+            <tr>
+                <td>@User.UserName</td>
+                <td>@User.Email</td>
+                <td>@User.Role</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@User.UserId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@User.UserId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
