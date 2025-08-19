@@ -122,19 +122,32 @@ namespace Training_Managment_System.Controllers
             if (course == null)
                 return NotFound();
 
-            return View(course);
+            //
+
+
+            var viewModel = new CourseViewModel
+            {
+                CourseId = course.CourseId,
+                CourseName = course.CourseName,
+                Category = course.Category,
+                InstructorId = course.InstructorID
+            };
+
+            return View(viewModel);
         }
 
         // POST: Course/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(CourseViewModel model)
         {
-            var course = await _courseRepo.GetById(id);
+            if (model.CourseId == null)
+                return BadRequest();
+            var course = await _courseRepo.GetById(model.CourseId.Value);
             if (course != null)
             {
                 await _courseRepo.Delete(course);
-                
+
             }
             return RedirectToAction(nameof(Index));
         }

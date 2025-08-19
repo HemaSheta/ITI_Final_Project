@@ -21,11 +21,10 @@ namespace Training_Managment_System.Repositories.Implementations
         }
 
 
-        public Task Delete(T entity)
+        public async Task Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
-            _context.SaveChangesAsync();
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
 
