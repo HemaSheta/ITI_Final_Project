@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Project_Final_ITI.Data;
 using Project_Final_ITI.Models;
+using Training_Managment_System.Repositories.Implementations;
 using Training_Managment_System.Repositories.Interfaces;
 using Training_Managment_System.ViewModels;
 
@@ -20,12 +21,23 @@ namespace Training_Managment_System.Controllers
 
 
         // GET: Course
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var courses = await _courseRepo.GetAll();
+            IEnumerable<Course> courses;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                courses = await _courseRepo.Find(
+                    c => c.CourseName.Contains(searchString) || c.Category.Contains(searchString)
+                );
+            }
+            else
+            {
+                courses = await _courseRepo.GetAll();
+            }
+
             return View(courses);
         }
-
         // GET: Course/Details/5
         public async Task<IActionResult> Details(int id)
         {
@@ -110,19 +122,32 @@ namespace Training_Managment_System.Controllers
             if (course == null)
                 return NotFound();
 
-            return View(course);
+            //
+
+
+            var viewModel = new CourseViewModel
+            {
+                CourseId = course.CourseId,
+                CourseName = course.CourseName,
+                Category = course.Category,
+                InstructorId = course.InstructorID
+            };
+
+            return View(viewModel);
         }
 
         // POST: Course/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(CourseViewModel model)
         {
-            var course = await _courseRepo.GetById(id);
+            if (model.CourseId == null)
+                return BadRequest();
+            var course = await _courseRepo.GetById(model.CourseId.Value);
             if (course != null)
             {
                 await _courseRepo.Delete(course);
-                //await _context.SaveChangesAsync();
+
             }
             return RedirectToAction(nameof(Index));
         }

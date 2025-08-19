@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,9 +20,13 @@ namespace Project_Final_ITI.Models
 
         // Navigation Properties
 
-        
+        [ValidateNever]
         public User User { get; set; }
+
+        [ValidateNever]
         public ICollection<Session> Sessions { get; set; }
+
+        [ValidateNever]
         public ICollection<Enrollment> Enrollments { get; set; }
     }
 }

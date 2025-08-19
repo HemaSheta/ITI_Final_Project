@@ -65,6 +65,11 @@ namespace Project_Final_ITI.Data
                 .HasForeignKey(g => g.TraineeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Course>()
+           .HasIndex(c => c.CourseName)
+           .IsUnique();
+
+
             modelBuilder.Entity<User>().HasData(
             new User{UserId = 1,UserName = "Dr. Ahmed",Email = "ahmed@iti.com",Role = "Instructor"},
             new User{UserId = 2,UserName = "Sara Ali",Email = "sara@student.com",Role = "Trainee"});
