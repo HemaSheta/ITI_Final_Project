@@ -7,16 +7,12 @@ namespace Training_Managment_System.Repositories.Implementations
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly ApplicationDbContext _context;
+        private new readonly ApplicationDbContext _context;
 
         public UserRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<User?> GetUserByEmail(string email)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
     }
 }

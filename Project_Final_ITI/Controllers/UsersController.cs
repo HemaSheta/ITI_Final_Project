@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project_Final_ITI.Models;
+
 using Training_Managment_System.Repositories.Interfaces;
+using Training_Managment_System.ViewModels;
 
 namespace Training_Managment_System.Controllers
 {
@@ -49,24 +51,20 @@ namespace Training_Managment_System.Controllers
         // POST: Users/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(User ur)
+        public async Task<IActionResult> Add(UserViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(vm);
+
+            var user = new User
             {
-                var user = new User
-                {
-                    UserName = ur.UserName,
-                    Email = ur.Email,
-                    Role = ur.Role
-                };
+                UserName = vm.UserName,
+                Email = vm.Email,
+                Role = vm.Role
+            };
 
-                await _userRepository.Add(user);
-
-                TempData["Message"] = "User added successfully!";
-                return RedirectToAction("Index");
-            }
-
-            return View(ur);
+            await _userRepository.Add(user);
+            TempData["Message"] = "User added successfully!";
+            return RedirectToAction("Index");
         }
 
         //////////////////////////////////////////////Edit///////////////////////////////////////////////////
@@ -78,23 +76,33 @@ namespace Training_Managment_System.Controllers
             var user = await _userRepository.GetById(id.Value);
             if (user == null) return NotFound();
 
-            return View(user);
+            // map User → UserViewModel
+            var vm = new UserViewModel
+            {
+                UserId = user.UserId,
+                UserName = user.UserName,
+                Email = user.Email,
+                Role = user.Role
+            };
+
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, User ur)
+        public async Task<IActionResult> Edit(int id, UserViewModel vm)
         {
-            if (!ModelState.IsValid) return View(ur);
+            if (!ModelState.IsValid) return View(vm);
 
             var user = await _userRepository.GetById(id);
             if (user == null) return NotFound();
 
-            user.UserName = ur.UserName;
-            user.Email = ur.Email;
-            user.Role = ur.Role;
+            // update entity with data from ViewModel
+            user.UserName = vm.UserName;
+            user.Email = vm.Email;
+            user.Role = vm.Role;
 
-            _userRepository.Update(user);
+            await _userRepository.Update(user);
 
             TempData["Message"] = "User updated successfully!";
             return RedirectToAction("Index");
