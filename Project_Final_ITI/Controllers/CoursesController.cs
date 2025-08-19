@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Project_Final_ITI.Data;
 using Project_Final_ITI.Models;
 using Training_Managment_System.Repositories.Interfaces;
+using Training_Managment_System.ViewModels;
 
 namespace Training_Managment_System.Controllers
 {
@@ -14,7 +15,7 @@ namespace Training_Managment_System.Controllers
         public CourseController(ICourseRepository courseRepo)
         {
             _courseRepo = courseRepo;
-            //_context = context;
+            
         }
 
 
@@ -44,17 +45,23 @@ namespace Training_Managment_System.Controllers
         // POST: Course/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        
-        public async Task<IActionResult> Create(Course course)
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CourseViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var course = new Course
+                {
+                    CourseName = model.CourseName,
+                    Category = model.Category,
+                    InstructorID = model.InstructorId
+                };
 
                 await _courseRepo.Add(course);
                 return RedirectToAction(nameof(Index));
-
             }
-            return View(course);
+            return View(model);
         }
 
         // GET: Course/Edit/5
@@ -64,23 +71,38 @@ namespace Training_Managment_System.Controllers
             if (course == null)
                 return NotFound();
 
-            return View(course);
+            var model = new CourseViewModel
+            {
+                CourseId = course.CourseId,
+                CourseName = course.CourseName,
+                Category = course.Category,
+                InstructorId = course.InstructorID
+            };
+
+            return View(model);
         }
 
         // POST: Course/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Course course)
+        public async Task<IActionResult> Edit(CourseViewModel model)
         {
             if (ModelState.IsValid)
             {
+                if (model.CourseId == null)
+                    return BadRequest();
+
+                var course = await _courseRepo.GetById(model.CourseId.Value);
+                course.CourseName = model.CourseName;
+                course.Category = model.Category;
+                course.InstructorID = model.InstructorId;
+
                 _courseRepo.Update(course);
-                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(course);
-        }
 
+            return View(model);
+        }
         // GET: Course/Delete/5
         public async Task<IActionResult> Delete(int id)
         {

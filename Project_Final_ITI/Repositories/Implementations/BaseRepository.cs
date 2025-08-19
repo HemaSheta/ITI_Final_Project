@@ -50,6 +50,7 @@ namespace Training_Managment_System.Repositories.Implementations
         public void Update(T entity)
         {
             _context.Set<T>().Update(entity);
+            _context.SaveChangesAsync();
         }
 
     }

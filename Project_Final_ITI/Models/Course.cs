@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Project_Final_ITI.Models
@@ -18,7 +19,7 @@ namespace Project_Final_ITI.Models
 
         // Navigation Properties
 
-
+        
         public User User { get; set; }
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
