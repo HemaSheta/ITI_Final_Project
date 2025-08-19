@@ -1,32 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Project_Final_ITI.Data;
 using Microsoft.EntityFrameworkCore;
 using Project_Final_ITI.Models;
-using System.Threading.Tasks;
-using System.Linq;
+using Training_Managment_System.Repositories.Interfaces;
 
 namespace Training_Managment_System.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         ///////////////////////////////////////////////////Home/////////////////////////////////////////
-
-        //public IActionResult Index()
-        //{
-        //    return View(_context.Users.ToList());
-        //}
-        public IActionResult Index(string name, string role)
+        public async Task<IActionResult> Index(string name, string role)
         {
             // Start with all users
-            var users = _context.Users.AsQueryable();
+            var users = await _userRepository.GetAll();
 
             // Filter by name
             if (!string.IsNullOrEmpty(name))
@@ -46,69 +38,66 @@ namespace Training_Managment_System.Controllers
 
             return View(users.ToList());
         }
-        ////////////////////////////////////////////////////Add//////////////////////////////////////////
 
+        ////////////////////////////////////////////////////Add//////////////////////////////////////////
         // GET: Users/Add
         public IActionResult Add()
         {
             return View();
         }
 
-        // POST: Users/Create
+        // POST: Users/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(User ur)
+        public async Task<IActionResult> Add(User ur)
         {
-
-            var user = new User
+            if (ModelState.IsValid)
             {
-                UserName = ur.UserName,
-                Email = ur.Email,
-                Role = ur.Role
-            };
+                var user = new User
+                {
+                    UserName = ur.UserName,
+                    Email = ur.Email,
+                    Role = ur.Role
+                };
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+                await _userRepository.Add(user);
 
-            TempData["Message"] = "User added successfully!";
-            return RedirectToAction("Index");
-        }
-
-        //////////////////////////////////////////////Edit///////////////////////////////////////////////////
-        [HttpGet]
-        public IActionResult Edit(int? id)
-        {
-            if (id == null) return BadRequest();
-
-            var user = _context.Users.FirstOrDefault(p => p.UserId == id);
-            if (user == null) return NotFound();
-
-            var ur = new User
-            {
-               UserName = user.UserName,
-                Email = user.Email,
-                Role = user.Role
-            };
+                TempData["Message"] = "User added successfully!";
+                return RedirectToAction("Index");
+            }
 
             return View(ur);
         }
 
+        //////////////////////////////////////////////Edit///////////////////////////////////////////////////
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return BadRequest();
+
+            var user = await _userRepository.GetById(id.Value);
+            if (user == null) return NotFound();
+
+            return View(user);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, User ur)
+        public async Task<IActionResult> Edit(int id, User ur)
         {
+            if (!ModelState.IsValid) return View(ur);
 
-            var user = _context.Users.FirstOrDefault(p => p.UserId == id);
+            var user = await _userRepository.GetById(id);
             if (user == null) return NotFound();
 
             user.UserName = ur.UserName;
             user.Email = ur.Email;
             user.Role = ur.Role;
 
-            _context.SaveChanges();
-            TempData["Message"] = "Product updated successfully!";
-            return RedirectToAction("Index");
+            _userRepository.Update(user);
 
+            TempData["Message"] = "User updated successfully!";
+            return RedirectToAction("Index");
         }
 
         //////////////////////////////////////////////Delete///////////////////////////////////////////////////
@@ -116,7 +105,7 @@ namespace Training_Managment_System.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _userRepository.GetById(id.Value);
             if (user == null) return NotFound();
 
             return View(user);
@@ -126,12 +115,12 @@ namespace Training_Managment_System.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetById(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
+                await _userRepository.Delete(user);
             }
+
             return RedirectToAction(nameof(Index));
         }
     }
