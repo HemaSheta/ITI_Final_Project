@@ -3,18 +3,29 @@
     ViewData["Title"] = "Session Details";
 }
 
-<h2>Session Details</h2>
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">Session Details</h3>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-3">
+            <dt class="col-sm-3 fw-bold">Course</dt>
+            <dd class="col-sm-9">@Model.Course?.CourseName</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Course</dt>
-    <dd class="col-sm-9">@Model.Course?.CourseName</dd>
+            <dt class="col-sm-3 fw-bold">Start Date</dt>
+            <dd class="col-sm-9">@Model.StartDate.ToString("yyyy-MM-dd")</dd>
 
-    <dt class="col-sm-3">Start Date</dt>
-    <dd class="col-sm-9">@Model.StartDate:yyyy-MM-dd</dd>
+            <dt class="col-sm-3 fw-bold">End Date</dt>
+            <dd class="col-sm-9">@Model.EndDate.ToString("yyyy-MM-dd")</dd>
+        </dl>
 
-    <dt class="col-sm-3">End Date</dt>
-    <dd class="col-sm-9">@Model.EndDate:yyyy-MM-dd</dd>
-</dl>
-
-<a asp-action="Edit" asp-route-id="@Model.SessionId" class="btn btn-primary">Edit</a>
-<a asp-action="Index" class="btn btn-secondary">Back</a>
+        <div class="d-flex gap-2 justify-content-start">
+            <a asp-action="Index" class="btn btn-secondary">
+                Back
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.SessionId" class="btn btn-primary">
+                Edit
+            </a>
+        </div>
+    </div>
+</div>
