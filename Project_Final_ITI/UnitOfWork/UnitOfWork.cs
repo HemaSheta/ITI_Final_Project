@@ -28,15 +28,16 @@ namespace Training_Managment_System.UnitOfWork
         }
 
 
-        public Task<int> Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
-
         public void Dispose()
         {
             _context.Dispose();
         }
+
+        public Task<int> SaveAsync() => _context.SaveChangesAsync();
 
     }
 }

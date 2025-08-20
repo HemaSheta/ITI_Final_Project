@@ -9,7 +9,9 @@ namespace Training_Managment_System.UnitOfWork
         public IUserRepository user { get; }
         public IGradeRepository grade { get; }
 
-        Task<int> Complete();
+        Task<int> CompleteAsync();
+        // saving changes
+        Task<int> SaveAsync();
 
     }
 }
