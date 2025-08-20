@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Project_Final_ITI.Models;
 using Training_Managment_System.UnitOfWork;
 using System.Threading.Tasks;
+using Training_Managment_System.ViewModels;
 
 namespace Training_Managment_System.Controllers
 {
@@ -44,14 +45,20 @@ namespace Training_Managment_System.Controllers
         // create a new Session after compelete form
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Session session)
+        public async Task<IActionResult> Create(SessionViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                await PopulateCoursesDropDown(session.CourseId);
-                return View(session);
+                await PopulateCoursesDropDown(model.CourseId);
+                return View(model);
             }
-
+            
+            var session = new Session
+            {
+                CourseId = model.CourseId,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate
+            };
             await iuow.SessionRepository.Add(session);
             await iuow.SaveAsync();
             return RedirectToAction(nameof(Index));
@@ -110,7 +117,7 @@ namespace Training_Managment_System.Controllers
         private async Task PopulateCoursesDropDown(int? selectedId = null)
         {
             var courses = await iuow.CourseRepository.GetAll();
-            ViewBag.CourseId = new SelectList(courses, "Id", "Name", selectedId);
+            ViewBag.CourseId = new SelectList(courses, "CourseId", "CourseName", selectedId);
         }
     }
 }
