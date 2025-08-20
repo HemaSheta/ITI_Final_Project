@@ -30,7 +30,9 @@ namespace Training_Managment_System.Controllers
         // Sessions details by ID
         public async Task<IActionResult> Details(int id)
         {
-            var session = await iuow.SessionRepository.GetById(id);
+            var sessions = await iuow.SessionRepository.GetAllWithCourseAsync();
+            var session = sessions.FirstOrDefault(s => s.SessionId == id);
+
             if (session == null) return NotFound();
             return View(session);
         }
@@ -103,7 +105,10 @@ namespace Training_Managment_System.Controllers
         // ensure the delete page
         public async Task<IActionResult> Delete(int id)
         {
-            var session = await iuow.SessionRepository.GetById(id);
+            
+            var sessions = await iuow.SessionRepository.GetAllWithCourseAsync();
+            var session = sessions.FirstOrDefault(s => s.SessionId == id);
+
             if (session == null) return NotFound();
             return View(session);
         }
