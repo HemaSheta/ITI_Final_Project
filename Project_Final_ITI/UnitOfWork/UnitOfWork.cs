@@ -10,17 +10,17 @@ namespace Training_Managment_System.UnitOfWork
 
         public ICourseRepository CourseRepository { get; }
         public ISessionRepository SessionRepository { get; }
-        public IUserRepository Users { get; }
+        public IUserRepository UserRepository { get; }
 
         public UnitOfWork(ApplicationDbContext context,
                           ICourseRepository courseRepository,
-                          IUserRepository users,
+                          IUserRepository userRepository,
                           ISessionRepository sessionRepository)
         {
             cont = context;
             CourseRepository = courseRepository;
             SessionRepository = sessionRepository;
-            Users = users;
+            UserRepository = userRepository;
         }
 
         public Task<int> SaveAsync() => cont.SaveChangesAsync();

@@ -18,7 +18,7 @@ namespace Training_Managment_System.Controllers
         ///////////////////////////////////////////////////Home/////////////////////////////////////////
         public async Task<IActionResult> Index(string name, string role)
         {
-            var users = await _unitOfWork.Users.GetAll();
+            var users = await _unitOfWork.UserRepository.GetAll();
 
             if (!string.IsNullOrEmpty(name))
             {
@@ -56,8 +56,8 @@ namespace Training_Managment_System.Controllers
                 Role = vm.Role
             };
 
-            await _unitOfWork.Users.Add(user);
-            await _unitOfWork.CompleteAsync(); // ✅ commit changes
+            await _unitOfWork.UserRepository.Add(user);
+            await _unitOfWork.CompleteAsync();
 
             TempData["Message"] = "User added successfully!";
             return RedirectToAction("Index");
@@ -69,7 +69,7 @@ namespace Training_Managment_System.Controllers
         {
             if (id == null) return BadRequest();
 
-            var user = await _unitOfWork.Users.GetById(id.Value);
+            var user = await _unitOfWork.UserRepository.GetById(id.Value);
             if (user == null) return NotFound();
 
             var vm = new UserViewModel
@@ -89,15 +89,15 @@ namespace Training_Managment_System.Controllers
         {
             if (!ModelState.IsValid) return View(vm);
 
-            var user = await _unitOfWork.Users.GetById(id);
+            var user = await _unitOfWork.UserRepository.GetById(id);
             if (user == null) return NotFound();
 
             user.UserName = vm.UserName;
             user.Email = vm.Email;
             user.Role = vm.Role;
 
-            await _unitOfWork.Users.Update(user);
-            await _unitOfWork.CompleteAsync(); // ✅ commit changes
+            await _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.CompleteAsync();
 
             TempData["Message"] = "User updated successfully!";
             return RedirectToAction("Index");
@@ -109,7 +109,7 @@ namespace Training_Managment_System.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = await _unitOfWork.Users.GetById(id.Value);
+            var user = await _unitOfWork.UserRepository.GetById(id.Value);
             if (user == null) return NotFound();
 
             return View(user);
@@ -119,11 +119,11 @@ namespace Training_Managment_System.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _unitOfWork.Users.GetById(id);
+            var user = await _unitOfWork.UserRepository.GetById(id);
             if (user != null)
             {
-                await _unitOfWork.Users.Delete(user);
-                await _unitOfWork.CompleteAsync(); // ✅ commit changes
+                await _unitOfWork.UserRepository.Delete(user);
+                await _unitOfWork.CompleteAsync();
             }
 
             return RedirectToAction(nameof(Index));
