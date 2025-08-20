@@ -6,9 +6,11 @@ namespace Training_Managment_System.UnitOfWork
     {
         ICourseRepository CourseRepository { get; }
         ISessionRepository SessionRepository { get; }
+        IUserRepository Users { get; }
 
         // saving changes
         Task<int> SaveAsync();
+        Task<int> CompleteAsync();
 
     }
 }
