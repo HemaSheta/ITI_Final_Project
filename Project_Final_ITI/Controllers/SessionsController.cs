@@ -20,8 +20,8 @@ namespace Training_Managment_System.Controllers
         public async Task<IActionResult> Index(string? search)
         {
             var sessions = string.IsNullOrWhiteSpace(search)
-                ? await iuow.SessionRepository.GetAllWithCourseAsync()
-                : await iuow.SessionRepository.SearchByCourseNameAsync(search);
+                ? await iuow.session.GetAllWithCourseAsync()
+                : await iuow.session.SearchByCourseNameAsync(search);
 
             ViewData["CurrentFilter"] = search;
             return View(sessions);
@@ -30,7 +30,9 @@ namespace Training_Managment_System.Controllers
         // Sessions details by ID
         public async Task<IActionResult> Details(int id)
         {
-            var session = await iuow.SessionRepository.GetById(id);
+            var sessions = await iuow.session.GetAllWithCourseAsync();
+            var session = sessions.FirstOrDefault(s => s.SessionId == id);
+
             if (session == null) return NotFound();
             return View(session);
         }
@@ -59,7 +61,7 @@ namespace Training_Managment_System.Controllers
                 StartDate = model.StartDate,
                 EndDate = model.EndDate
             };
-            await iuow.SessionRepository.Add(session);
+            await iuow.session.Add(session);
             await iuow.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -67,7 +69,7 @@ namespace Training_Managment_System.Controllers
         // edit page Sessions
         public async Task<IActionResult> Edit(int id)
         {
-            var session = await iuow.SessionRepository.GetById(id);
+            var session = await iuow.session.GetById(id);
             if (session == null) return NotFound();
 
             await PopulateCoursesDropDown(session.CourseId);
@@ -87,7 +89,7 @@ namespace Training_Managment_System.Controllers
                 return View(model);
             }
 
-            var session = await iuow.SessionRepository.GetById(id);
+            var session = await iuow.session.GetById(id);
             if (session == null) return NotFound();
 
 
@@ -103,7 +105,10 @@ namespace Training_Managment_System.Controllers
         // ensure the delete page
         public async Task<IActionResult> Delete(int id)
         {
-            var session = await iuow.SessionRepository.GetById(id);
+            
+            var sessions = await iuow.session.GetAllWithCourseAsync();
+            var session = sessions.FirstOrDefault(s => s.SessionId == id);
+
             if (session == null) return NotFound();
             return View(session);
         }
@@ -113,10 +118,10 @@ namespace Training_Managment_System.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var session = await iuow.SessionRepository.GetById(id);
+            var session = await iuow.session.GetById(id);
             if (session == null) return NotFound();
 
-            await Task.Run(() => iuow.SessionRepository.Delete(session));
+            await Task.Run(() => iuow.session.Delete(session));
             await iuow.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -124,7 +129,7 @@ namespace Training_Managment_System.Controllers
         // help to see courses
         private async Task PopulateCoursesDropDown(int? selectedId = null)
         {
-            var courses = await iuow.CourseRepository.GetAll();
+            var courses = await iuow.session.GetAll();
             ViewBag.CourseId = new SelectList(courses, "CourseId", "CourseName", selectedId);
         }
     }

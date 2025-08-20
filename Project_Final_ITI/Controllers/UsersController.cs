@@ -18,7 +18,7 @@ namespace Training_Managment_System.Controllers
         ///////////////////////////////////////////////////Home/////////////////////////////////////////
         public async Task<IActionResult> Index(string name, string role)
         {
-            var users = await _unitOfWork.UserRepository.GetAll();
+            var users = await _unitOfWork.user.GetAll();
 
             if (!string.IsNullOrEmpty(name))
             {
@@ -56,7 +56,7 @@ namespace Training_Managment_System.Controllers
                 Role = vm.Role
             };
 
-            await _unitOfWork.UserRepository.Add(user);
+            await _unitOfWork.user.Add(user);
             await _unitOfWork.CompleteAsync();
 
             TempData["Message"] = "User added successfully!";
@@ -69,7 +69,7 @@ namespace Training_Managment_System.Controllers
         {
             if (id == null) return BadRequest();
 
-            var user = await _unitOfWork.UserRepository.GetById(id.Value);
+            var user = await _unitOfWork.user.GetById(id.Value);
             if (user == null) return NotFound();
 
             var vm = new UserViewModel
@@ -89,14 +89,14 @@ namespace Training_Managment_System.Controllers
         {
             if (!ModelState.IsValid) return View(vm);
 
-            var user = await _unitOfWork.UserRepository.GetById(id);
+            var user = await _unitOfWork.user.GetById(id);
             if (user == null) return NotFound();
 
             user.UserName = vm.UserName;
             user.Email = vm.Email;
             user.Role = vm.Role;
 
-            await _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.user.Update(user);
             await _unitOfWork.CompleteAsync();
 
             TempData["Message"] = "User updated successfully!";
@@ -109,7 +109,7 @@ namespace Training_Managment_System.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = await _unitOfWork.UserRepository.GetById(id.Value);
+            var user = await _unitOfWork.user.GetById(id.Value);
             if (user == null) return NotFound();
 
             return View(user);
@@ -119,10 +119,10 @@ namespace Training_Managment_System.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetById(id);
+            var user = await _unitOfWork.user.GetById(id);
             if (user != null)
             {
-                await _unitOfWork.UserRepository.Delete(user);
+                await _unitOfWork.user.Delete(user);
                 await _unitOfWork.CompleteAsync();
             }
 

@@ -6,27 +6,38 @@ namespace Training_Managment_System.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext cont;
+        private readonly ApplicationDbContext _context;
+        public ICourseRepository course { get; }
+        public ISessionRepository session { get; }
+        public IUserRepository user { get; }
+        public IGradeRepository grade { get; }
 
-        public ICourseRepository CourseRepository { get; }
-        public ISessionRepository SessionRepository { get; }
-        public IUserRepository UserRepository { get; }
-
-        public UnitOfWork(ApplicationDbContext context,
-                          ICourseRepository courseRepository,
-                          IUserRepository userRepository,
-                          ISessionRepository sessionRepository)
+        public UnitOfWork(
+            ApplicationDbContext context,
+            IGradeRepository grades,
+            ICourseRepository courses,
+            ISessionRepository sessions,
+            IUserRepository users)
         {
-            cont = context;
-            CourseRepository = courseRepository;
-            SessionRepository = sessionRepository;
-            UserRepository = userRepository;
+            _context = context;
+            course = courses;
+            session = sessions;
+            user = users;
+            grade = grades;
+
         }
 
-        public Task<int> SaveAsync() => cont.SaveChangesAsync();
+
         public async Task<int> CompleteAsync()
         {
-            return await cont.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
+        public Task<int> SaveAsync() => _context.SaveChangesAsync();
+
     }
 }
