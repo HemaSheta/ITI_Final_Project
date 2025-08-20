@@ -2,15 +2,14 @@
 
 namespace Training_Managment_System.UnitOfWork
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        ICourseRepository CourseRepository { get; }
-        ISessionRepository SessionRepository { get; }
-        IUserRepository UserRepository { get; }
+        public ICourseRepository course { get; }
+        public ISessionRepository session { get; }
+        public IUserRepository user { get; }
+        public IGradeRepository grade { get; }
 
-        // saving changes
-        Task<int> SaveAsync();
-        Task<int> CompleteAsync();
+        Task<int> Complete();
 
     }
 }
