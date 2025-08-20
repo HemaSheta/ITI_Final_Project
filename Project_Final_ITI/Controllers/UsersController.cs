@@ -1,40 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Project_Final_ITI.Models;
-
 using Training_Managment_System.Repositories.Interfaces;
+using Training_Managment_System.UnitOfWork;
 using Training_Managment_System.ViewModels;
 
 namespace Training_Managment_System.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         ///////////////////////////////////////////////////Home/////////////////////////////////////////
         public async Task<IActionResult> Index(string name, string role)
         {
-            // Start with all users
-            var users = await _userRepository.GetAll();
+            var users = await _unitOfWork.Users.GetAll();
 
-            // Filter by name
             if (!string.IsNullOrEmpty(name))
             {
                 users = users.Where(u => u.UserName.Contains(name));
             }
 
-            // Filter by role (only if not "All")
             if (!string.IsNullOrEmpty(role) && role != "All")
             {
                 users = users.Where(u => u.Role == role);
             }
 
-            // Pass current search values back to the View (for persistence)
             ViewBag.CurrentName = name;
             ViewBag.CurrentRole = role;
 
@@ -42,13 +37,12 @@ namespace Training_Managment_System.Controllers
         }
 
         ////////////////////////////////////////////////////Add//////////////////////////////////////////
-        // GET: Users/Add
+        [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
 
-        // POST: Users/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(UserViewModel vm)
@@ -62,7 +56,9 @@ namespace Training_Managment_System.Controllers
                 Role = vm.Role
             };
 
-            await _userRepository.Add(user);
+            await _unitOfWork.Users.Add(user);
+            await _unitOfWork.CompleteAsync(); // ✅ commit changes
+
             TempData["Message"] = "User added successfully!";
             return RedirectToAction("Index");
         }
@@ -73,10 +69,9 @@ namespace Training_Managment_System.Controllers
         {
             if (id == null) return BadRequest();
 
-            var user = await _userRepository.GetById(id.Value);
+            var user = await _unitOfWork.Users.GetById(id.Value);
             if (user == null) return NotFound();
 
-            // map User → UserViewModel
             var vm = new UserViewModel
             {
                 UserId = user.UserId,
@@ -94,26 +89,27 @@ namespace Training_Managment_System.Controllers
         {
             if (!ModelState.IsValid) return View(vm);
 
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Users.GetById(id);
             if (user == null) return NotFound();
 
-            // update entity with data from ViewModel
             user.UserName = vm.UserName;
             user.Email = vm.Email;
             user.Role = vm.Role;
 
-            await _userRepository.Update(user);
+            await _unitOfWork.Users.Update(user);
+            await _unitOfWork.CompleteAsync(); // ✅ commit changes
 
             TempData["Message"] = "User updated successfully!";
             return RedirectToAction("Index");
         }
 
         //////////////////////////////////////////////Delete///////////////////////////////////////////////////
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var user = await _userRepository.GetById(id.Value);
+            var user = await _unitOfWork.Users.GetById(id.Value);
             if (user == null) return NotFound();
 
             return View(user);
@@ -123,10 +119,11 @@ namespace Training_Managment_System.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Users.GetById(id);
             if (user != null)
             {
-                await _userRepository.Delete(user);
+                await _unitOfWork.Users.Delete(user);
+                await _unitOfWork.CompleteAsync(); // ✅ commit changes
             }
 
             return RedirectToAction(nameof(Index));
