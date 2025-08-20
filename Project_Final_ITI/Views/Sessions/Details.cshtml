@@ -1,0 +1,20 @@
+﻿@model Project_Final_ITI.Models.Session
+@{
+    ViewData["Title"] = "Session Details";
+}
+
+<h2>Session Details</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Course</dt>
+    <dd class="col-sm-9">@Model.Course?.CourseName</dd>
+
+    <dt class="col-sm-3">Start Date</dt>
+    <dd class="col-sm-9">@Model.StartDate:yyyy-MM-dd</dd>
+
+    <dt class="col-sm-3">End Date</dt>
+    <dd class="col-sm-9">@Model.EndDate:yyyy-MM-dd</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.SessionId" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back</a>
