@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Courses";
+    var searchString = Context.Request.Query["searchString"].ToString();
 }
 
 <div class="container mt-4">
@@ -17,11 +18,21 @@
     <!-- Search Form -->
     <form asp-action="Index" asp-controller="Course" method="get" class="mb-3">
         <div class="input-group">
-            <input type="text" name="searchString" value="@Context.Request.Query["searchString"]"
+            <input type="text" name="searchString" value="@searchString"
                    class="form-control" placeholder="Search by course name or category..." />
+
+            <!-- Search Button -->
             <button type="submit" class="btn btn-outline-secondary">
                 <i class="bi bi-search"></i> Search
             </button>
+
+            <!-- Reset Button يظهر بس لو فيه سيرش -->
+            @if (!string.IsNullOrEmpty(searchString))
+            {
+                <a asp-action="Index" asp-controller="Course" class="btn btn-outline-danger">
+                    <i class="bi bi-x-circle"></i> Reset
+                </a>
+            }
         </div>
     </form>
 
