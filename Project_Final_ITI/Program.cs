@@ -1,8 +1,9 @@
-using Project_Final_ITI.Data;
 using Microsoft.EntityFrameworkCore;
-using Training_Managment_System.Repositories.Interfaces;
-using Training_Managment_System.Repositories.Implementations;
+using Project_Final_ITI.Data;
 using Project_Final_ITI.Models;
+using Training_Managment_System.Repositories.Implementations;
+using Training_Managment_System.Repositories.Interfaces;
+using Training_Managment_System.UnitOfWork;
 
 namespace Project_Final_ITI
 
@@ -21,6 +22,8 @@ namespace Project_Final_ITI
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 
