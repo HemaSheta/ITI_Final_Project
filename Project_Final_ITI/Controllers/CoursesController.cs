@@ -11,8 +11,7 @@ namespace Training_Managment_System.Controllers
     public class CourseController : Controller
     {
         private readonly ICourseRepository _courseRepo;
-        //private readonly ApplicationDbContext _context;
-
+        
         public CourseController(ICourseRepository courseRepo)
         {
             _courseRepo = courseRepo;
@@ -122,7 +121,6 @@ namespace Training_Managment_System.Controllers
             if (course == null)
                 return NotFound();
 
-            //
 
 
             var viewModel = new CourseViewModel
