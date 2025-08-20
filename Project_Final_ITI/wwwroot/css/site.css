@@ -51,12 +51,7 @@ body {
 }
 
 /*-------------------for search box-----------------------*/
-input[type="text"]:focus,
-input[type="search"]:focus {
-    outline: none;
-    border: 2px solid #007bff;
-    box-shadow: none; 
-}
+
 
 .form-control:focus {
     border-color: #0d6efd !important;
