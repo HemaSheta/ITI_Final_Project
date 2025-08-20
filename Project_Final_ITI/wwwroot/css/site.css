@@ -29,3 +29,24 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+
+
+
+/*------------------------------------------*/
+
+.btn:focus, .btn:active {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-danger:focus, .btn-danger:active {
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.5);
+}
+
+.btn:active {
+    transform: scale(0.97);
+    filter: brightness(90%);
+}
+
