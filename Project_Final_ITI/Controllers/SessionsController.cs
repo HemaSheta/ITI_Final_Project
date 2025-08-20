@@ -77,17 +77,25 @@ namespace Training_Managment_System.Controllers
         // confirm edits on Sessions
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Session session)
+        public async Task<IActionResult> Edit(int id, SessionViewModel model)
         {
-            if (id != session.SessionId) return BadRequest();
+            if (id != model.SessionId) return BadRequest();
 
             if (!ModelState.IsValid)
             {
-                await PopulateCoursesDropDown(session.CourseId);
-                return View(session);
+                await PopulateCoursesDropDown(model.CourseId);
+                return View(model);
             }
 
-            iuow.SessionRepository.Update(session);
+            var session = await iuow.SessionRepository.GetById(id);
+            if (session == null) return NotFound();
+
+
+            session.CourseId = model.CourseId;
+            session.StartDate = model.StartDate;
+            session.EndDate = model.EndDate;
+            
+
             await iuow.SaveAsync();
             return RedirectToAction(nameof(Index));
         }

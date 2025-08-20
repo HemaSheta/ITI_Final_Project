@@ -5,6 +5,7 @@ namespace Training_Managment_System.ViewModels
     public class SessionViewModel
     {
 
+        public int? SessionId { get; set; }
 
         [Required]
         public int CourseId { get; set; }
