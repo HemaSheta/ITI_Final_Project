@@ -80,6 +80,12 @@ namespace Project_Final_ITI.Data
 
             modelBuilder.Entity<Enrollment>().HasData(
             new Enrollment{StudentId = 2, CourseId = 1  });
+
+
+            // Seed Sessions
+            modelBuilder.Entity<Session>().HasData(
+            new Session{SessionId = 1,StartDate = DateTime.Now.Date.AddDays(10),EndDate = DateTime.Now.Date.AddDays(20),CourseId = 1},
+            new Session{SessionId = 2,StartDate = DateTime.Now.Date.AddDays(15),EndDate = DateTime.Now.Date.AddDays(30),CourseId = 2});
         }
 
     }
