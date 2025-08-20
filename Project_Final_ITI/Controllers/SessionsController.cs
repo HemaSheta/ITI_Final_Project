@@ -129,7 +129,7 @@ namespace Training_Managment_System.Controllers
         // help to see courses
         private async Task PopulateCoursesDropDown(int? selectedId = null)
         {
-            var courses = await iuow.session.GetAll();
+            var courses = await iuow.course.GetAll(); //  use Courses repo
             ViewBag.CourseId = new SelectList(courses, "CourseId", "CourseName", selectedId);
         }
     }
