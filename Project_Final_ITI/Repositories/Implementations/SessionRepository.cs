@@ -14,6 +14,13 @@ namespace Training_Managment_System.Repositories.Implementations
             cont = context;
         }
 
+        public async Task<IEnumerable<Session>> GetAllWithCourseAsync()
+        {
+            return await cont.Sessions
+                .Include(s => s.Course)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Session>> SearchByCourseNameAsync(string courseName)
         {
             return await cont.Sessions

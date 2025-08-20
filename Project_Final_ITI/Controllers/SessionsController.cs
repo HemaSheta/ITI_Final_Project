@@ -19,7 +19,7 @@ namespace Training_Managment_System.Controllers
         public async Task<IActionResult> Index(string? search)
         {
             var sessions = string.IsNullOrWhiteSpace(search)
-                ? await iuow.SessionRepository.GetAll()
+                ? await iuow.SessionRepository.GetAllWithCourseAsync()
                 : await iuow.SessionRepository.SearchByCourseNameAsync(search);
 
             ViewData["CurrentFilter"] = search;
