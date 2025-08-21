@@ -12,61 +12,58 @@ namespace Training_Managment_System.Controllers
     {   
          private readonly IUnitOfWork _unitOfWork;
         public GradesController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
-        
+
         // GET: /Grade/Index
-        public IActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var grades = _unitOfWork.grade.GetAll();
+            var grades =await _unitOfWork.grade.GetAll();
             return View(grades);
         }
-        // GET: /Grade/Details/{id}
-        public IActionResult Details(int id)
+        // GET: /Grade/Details/id
+        public async Task<ActionResult> Details(int id)
         {
-            var grade = _unitOfWork.grade.GetById(id);
+            var grade = await _unitOfWork.grade.GetById(id);
             if (grade == null) return NotFound();
             return View(grade);
         }
         // GET: /Grade/Create
-        public ActionResult Create()
+        public  async Task<ActionResult> CreateAsync()
         {
-            ViewBag.SessionId = new SelectList((System.Collections.IEnumerable)_unitOfWork.session.GetAll(), "Id", "Id");
-            ViewBag.TraineeId = new SelectList((System.Collections.IEnumerable)_unitOfWork.user.GetAll(), "Id", "Name");
+            await PopulateSessionsDropDown();
+            await PopulateUsersDropDown();
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Grade grade)
+        public async Task<ActionResult> Create(Grade model)
         {
             if (ModelState.IsValid)
             {
-                
-                var exists = await _unitOfWork.grade.GetAll();
-                var existsBool = exists.Any(g =>
-                    g.SessionId == grade.SessionId &&
-                    g.TraineeId == grade.TraineeId);
-
-                if (existsBool)
-                {
-                    ModelState.AddModelError("", "this trainee already has a grade in this session!!");
-                }
-                else
-                {
-                    _ = _unitOfWork.grade.Add(grade);////////////////////////////////
-                    //_unitOfWork.Complete(); // already existing
-                    return RedirectToAction("Index");
-                }
+                var existsGrades = await _unitOfWork.grade.GetAll();
+                await _unitOfWork.grade.Add(model);
+                return RedirectToAction("Index");
             }
-            ViewBag.SessionId = new SelectList((System.Collections.IEnumerable)_unitOfWork.session.GetAll(), "Id", "Id", grade.SessionId);
-            ViewBag.TraineeId = new SelectList((System.Collections.IEnumerable)_unitOfWork.user.GetAll(),"Id", "Name", grade.TraineeId);
-            return View(grade);
+            await PopulateSessionsDropDown(model.SessionId);
+            await PopulateUsersDropDown(model.TraineeId);
+            return View(model);
         }
 
 
 
 
 
-        
 
+        private async Task PopulateSessionsDropDown(int? selectedId = null)
+        {
+            var sessions = await _unitOfWork.session.GetAll();
+            ViewBag.SessionId = new SelectList(sessions, "SessionId", "SessionId", selectedId);
+        }
+        private async Task PopulateUsersDropDown(int? selectedId = null)
+        {
+
+            var Users = await _unitOfWork.user.GetAll();
+            ViewBag.TraineeId = new SelectList(Users, "UserId", "UserName", selectedId);
+        }
 
 
     }
