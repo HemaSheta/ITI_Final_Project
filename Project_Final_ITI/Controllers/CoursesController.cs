@@ -4,19 +4,16 @@ using Project_Final_ITI.Data;
 using Project_Final_ITI.Models;
 using Training_Managment_System.Repositories.Implementations;
 using Training_Managment_System.Repositories.Interfaces;
+using Training_Managment_System.UnitOfWork;
 using Training_Managment_System.ViewModels;
 
 namespace Training_Managment_System.Controllers
 {
     public class CourseController : Controller
     {
-        private readonly ICourseRepository _courseRepo;
-        
-        public CourseController(ICourseRepository courseRepo)
-        {
-            _courseRepo = courseRepo;
-            
-        }
+        private readonly IUnitOfWork _unitOfWork;
+        public CourseController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+
 
 
         // GET: Course
@@ -26,13 +23,13 @@ namespace Training_Managment_System.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = await _courseRepo.Find(
+                courses = await _unitOfWork.course.Find(
                     c => c.CourseName.Contains(searchString) || c.Category.Contains(searchString)
                 );
             }
             else
             {
-                courses = await _courseRepo.GetAll();
+                courses = await _unitOfWork.course.GetAll();
             }
 
             return View(courses);
@@ -40,7 +37,7 @@ namespace Training_Managment_System.Controllers
         // GET: Course/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var course = await _courseRepo.GetById(id);
+            var course = await _unitOfWork.course.GetById(id);
             if (course == null)
                 return NotFound();
 
@@ -69,7 +66,7 @@ namespace Training_Managment_System.Controllers
                     InstructorID = model.InstructorId
                 };
 
-                await _courseRepo.Add(course);
+                await _unitOfWork.course.Add(course);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -78,7 +75,7 @@ namespace Training_Managment_System.Controllers
         // GET: Course/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var course = await _courseRepo.GetById(id);
+            var course = await _unitOfWork.course.GetById(id);
             if (course == null)
                 return NotFound();
 
@@ -103,12 +100,12 @@ namespace Training_Managment_System.Controllers
                 if (model.CourseId == null)
                     return BadRequest();
 
-                var course = await _courseRepo.GetById(model.CourseId.Value);
+                var course = await _unitOfWork.course.GetById(model.CourseId.Value);
                 course.CourseName = model.CourseName;
                 course.Category = model.Category;
                 course.InstructorID = model.InstructorId;
 
-                _courseRepo.Update(course);
+                await _unitOfWork.course.Update(course);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -117,7 +114,7 @@ namespace Training_Managment_System.Controllers
         // GET: Course/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var course = await _courseRepo.GetById(id);
+            var course = await _unitOfWork.course.GetById(id);
             if (course == null)
                 return NotFound();
 
@@ -141,10 +138,10 @@ namespace Training_Managment_System.Controllers
         {
             if (model.CourseId == null)
                 return BadRequest();
-            var course = await _courseRepo.GetById(model.CourseId.Value);
+            var course = await _unitOfWork.course.GetById(model.CourseId.Value);
             if (course != null)
             {
-                await _courseRepo.Delete(course);
+                await _unitOfWork.course.Delete(course);
 
             }
             return RedirectToAction(nameof(Index));
