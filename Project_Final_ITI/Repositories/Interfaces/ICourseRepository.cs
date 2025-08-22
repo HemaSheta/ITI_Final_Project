@@ -6,8 +6,9 @@ namespace Training_Managment_System.Repositories.Interfaces
     {
 
         //Task<Course> Search(String? name ,string? category) { }
+        Task<IEnumerable<Course>> GetAllWithInstructorAsync();
+        Task<IEnumerable<Course>> FindWithInstructor(System.Linq.Expressions.Expression<Func<Course, bool>> predicate);
 
-        
 
     }
 }

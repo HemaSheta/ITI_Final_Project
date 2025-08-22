@@ -23,13 +23,13 @@ namespace Training_Managment_System.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                courses = await _unitOfWork.course.Find(
-                    c => c.CourseName.Contains(searchString) || c.Category.Contains(searchString)
+                courses = await _unitOfWork.course.FindWithInstructor(
+                    c => c.CourseName.Contains(searchString) || c.Category.Contains(searchString) 
                 );
             }
             else
             {
-                courses = await _unitOfWork.course.GetAll();
+                courses = await _unitOfWork.course.GetAllWithInstructorAsync();
             }
 
             return View(courses);

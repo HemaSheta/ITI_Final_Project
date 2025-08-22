@@ -13,6 +13,12 @@ namespace Training_Managment_System.Repositories.Implementations
         {
             _context = context;
         }
-
+        public async Task<IEnumerable<User>> GetAllInstructorsAsync()
+        {
+            return await _context.Users
+                .Where(u => u.Role == "Instructor")   
+                .OrderBy(u => u.UserName)
+                .ToListAsync();
+        }
     }
 }

@@ -4,6 +4,6 @@ namespace Training_Managment_System.Repositories.Interfaces
 {
     public interface IUserRepository : IBaseRepository<User>
     {
-
+        Task<IEnumerable<User>> GetAllInstructorsAsync();
     }
 }

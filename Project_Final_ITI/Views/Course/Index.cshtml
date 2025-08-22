@@ -62,7 +62,7 @@
                             <tr>
                                 <td class="fw-semibold">@course.CourseName</td>
                                 <td>@course.Category</td>
-                                <td>@course.InstructorID</td>
+                                <td>@course.User?.UserName</td>
                                 <td class="text-center">
                                     <a asp-controller="Course" asp-action="Edit" asp-route-id="@course.CourseId"
                                        class="btn btn-sm btn-warning me-1">
