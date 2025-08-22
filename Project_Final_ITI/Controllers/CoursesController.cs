@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project_Final_ITI.Data;
 using Project_Final_ITI.Models;
@@ -45,8 +46,10 @@ namespace Training_Managment_System.Controllers
         }
 
         // GET: Course/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var instructors = await _unitOfWork.user.GetAllInstructorsAsync();
+            ViewBag.Instructors = new SelectList(instructors, "UserId", "UserName");
             return View();
         }
 
@@ -69,6 +72,8 @@ namespace Training_Managment_System.Controllers
                 await _unitOfWork.course.Add(course);
                 return RedirectToAction(nameof(Index));
             }
+            var instructors = await _unitOfWork.user.GetAllInstructorsAsync();
+            ViewBag.Instructors = new SelectList(instructors, "UserId", "UserName", model.InstructorId);
             return View(model);
         }
 
