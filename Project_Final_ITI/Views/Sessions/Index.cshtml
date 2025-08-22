@@ -41,6 +41,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
+                        <th>Session</th>
                         <th>Course</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -59,6 +60,7 @@
                         foreach (var item in Model)
                         {
                             <tr>
+                                <td>@item.SessionId</td>
                                 <td>@item.Course?.CourseName</td>
                                 <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
                                 <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
