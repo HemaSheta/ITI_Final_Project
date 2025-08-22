@@ -16,7 +16,7 @@ namespace Training_Managment_System.Controllers
         // GET: /Grade/Index
         public async Task<ActionResult> Index()
         {
-            var grades =await _unitOfWork.grade.GetAll();
+            var grades = await _unitOfWork.grade.GetAllWithTraneeAndCourseAsync();
             return View(grades);
         }
         // GET: /Grade/Details/id
@@ -35,12 +35,19 @@ namespace Training_Managment_System.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Grade model)
+        public async Task<ActionResult> Create(GradeViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var existsGrades = await _unitOfWork.grade.GetAll();
-                await _unitOfWork.grade.Add(model);
+                var grade = new Grade
+                {
+                    SessionId = model.SessionId,
+                    TraineeId = model.TraineeId,
+                    Value = model.gardeValue
+
+                };
+                await _unitOfWork.grade.Add(grade);
                 return RedirectToAction("Index");
             }
             await PopulateSessionsDropDown(model.SessionId);
