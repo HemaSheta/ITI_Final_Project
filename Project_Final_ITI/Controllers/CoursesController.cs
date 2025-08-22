@@ -92,6 +92,9 @@ namespace Training_Managment_System.Controllers
                 InstructorId = course.InstructorID
             };
 
+            var instructors = await _unitOfWork.user.GetAllInstructorsAsync();
+            ViewBag.Instructors = new SelectList(instructors, "UserId", "UserName", course.InstructorID);
+
             return View(model);
         }
 
@@ -113,6 +116,10 @@ namespace Training_Managment_System.Controllers
                 await _unitOfWork.course.Update(course);
                 return RedirectToAction(nameof(Index));
             }
+
+            var instructors = await _unitOfWork.user.GetAllInstructorsAsync();
+            ViewBag.Instructors = new SelectList(instructors, "UserId", "UserName", model.InstructorId);
+
 
             return View(model);
         }
