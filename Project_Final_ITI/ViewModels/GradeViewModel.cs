@@ -4,7 +4,7 @@ namespace Training_Managment_System.ViewModels
     public class GradeViewModel
     {
         [Required]
-        public double gardeValue { get; set; }
+        public double Value { get; set; }
         [Required]
         public int TraineeId { get; set; }
         public string TraineeName { get; set; }

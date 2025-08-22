@@ -2,7 +2,6 @@
 using Project_Final_ITI.Data;
 using Project_Final_ITI.Models;
 using Training_Managment_System.Repositories.Interfaces;
-using Training_Managment_System.ViewModels;
 
 namespace Training_Managment_System.Repositories.Implementations
 {
@@ -12,15 +11,31 @@ namespace Training_Managment_System.Repositories.Implementations
         {
         }
 
-        public async Task<IEnumerable<Grade>> GetAllWithTraneeAndCourseAsync()
+        // ✅ Add new Grade and Save
+        public async Task AddGradeAsync(Grade grade)
         {
-            var gradeView = await _context.Grades.Include(g => g.User)
-                           .Include(g => g.Session)
-                                .ThenInclude(g => g.Course)
-                            .ToListAsync();
-            return (IEnumerable<Grade>)gradeView;
+            await _context.Grades.AddAsync(grade);
+            await _context.SaveChangesAsync();  // <- required
         }
 
+        // ✅ Load all Grades with Trainee + Session + Course
+        public async Task<IEnumerable<Grade>> GetAllWithTraineeAndCourseAsync()
+        {
+            return await _context.Grades
+                .Include(g => g.User)
+                .Include(g => g.Session)
+                    .ThenInclude(s => s.Course)
+                .ToListAsync();
+        }
 
+        // ✅ Get Grade by Id with full navigation properties
+        public async Task<Grade?> GetById(int id)
+        {
+            return await _context.Grades
+                .Include(g => g.User)
+                .Include(g => g.Session)
+                    .ThenInclude(s => s.Course)
+                .FirstOrDefaultAsync(g => g.GradeId == id);
+        }
     }
 }
