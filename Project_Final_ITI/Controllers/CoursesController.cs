@@ -62,6 +62,12 @@ namespace Training_Managment_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingCourse = await _unitOfWork.course.Find(c => c.CourseName == model.CourseName);
+                if (existingCourse.Any())
+                {
+                    ModelState.AddModelError("CourseName", "This course name already exists.");
+                    return View(model);
+                }
                 var course = new Course
                 {
                     CourseName = model.CourseName,
