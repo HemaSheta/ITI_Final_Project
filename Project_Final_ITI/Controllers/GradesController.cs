@@ -38,26 +38,29 @@ namespace Training_Managment_System.Controllers
         // POST: /Grade/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(GradeViewModel model)
+        public async Task<IActionResult> Create(GradeViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var grade = new Grade
-                {
-                    SessionId = model.SessionId,
-                    TraineeId = model.TraineeId,
-                    Value = model.Value   
-                };
-
-                await _unitOfWork.grade.Add(grade);
-                return RedirectToAction(nameof(Index));
+                await PopulateUsersDropDown(model.TraineeId);
+                await PopulateSessionsDropDown(model.SessionId);
+                return View(model);
             }
 
-            // If model state is invalid, reload dropdowns
-            await PopulateSessionsDropDown(model.SessionId);
-            await PopulateUsersDropDown(model.TraineeId);
-            return View(model);
+            var grade = new Grade
+            {
+                Value = model.Value,
+                TraineeId = model.TraineeId,
+                SessionId = model.SessionId
+            };
+
+            await _unitOfWork.grade.Add(grade);
+            await _unitOfWork.CompleteAsync();
+
+            return RedirectToAction(nameof(Index));
         }
+
+        // ---------- Helpers ----------
 
         private async Task PopulateSessionsDropDown(int? selectedId = null)
         {
@@ -68,7 +71,7 @@ namespace Training_Managment_System.Controllers
         private async Task PopulateUsersDropDown(int? selectedId = null)
         {
             var trainees = (await _unitOfWork.user.GetAll())
-                           .Where(u => u.Role == "Trainee"); // adjust property name
+                           .Where(u => u.Role == "Trainee");
 
             ViewBag.TraineeId = new SelectList(trainees, "UserId", "UserName", selectedId);
         }

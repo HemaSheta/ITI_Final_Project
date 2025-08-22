@@ -7,18 +7,8 @@ namespace Training_Managment_System.Repositories.Implementations
 {
     public class GradeRepository : BaseRepository<Grade>, IGradeRepository
     {
-        public GradeRepository(ApplicationDbContext context) : base(context)
-        {
-        }
+        public GradeRepository(ApplicationDbContext context) : base(context) { }
 
-        // ✅ Add new Grade and Save
-        public async Task AddGradeAsync(Grade grade)
-        {
-            await _context.Grades.AddAsync(grade);
-            await _context.SaveChangesAsync();  // <- required
-        }
-
-        // ✅ Load all Grades with Trainee + Session + Course
         public async Task<IEnumerable<Grade>> GetAllWithTraineeAndCourseAsync()
         {
             return await _context.Grades
@@ -28,8 +18,7 @@ namespace Training_Managment_System.Repositories.Implementations
                 .ToListAsync();
         }
 
-        // ✅ Get Grade by Id with full navigation properties
-        public async Task<Grade?> GetById(int id)
+        public async Task<Grade?> GetByIdWithIncludesAsync(int id)
         {
             return await _context.Grades
                 .Include(g => g.User)
