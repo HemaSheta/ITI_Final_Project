@@ -66,6 +66,8 @@ namespace Training_Managment_System.Controllers
                 if (existingCourse.Any())
                 {
                     ModelState.AddModelError("CourseName", "This course name already exists.");
+                    var Instructors = await _unitOfWork.user.GetAllInstructorsAsync();
+                    ViewBag.Instructors = new SelectList(Instructors, "UserId", "UserName", model.InstructorId);
                     return View(model);
                 }
                 var course = new Course
