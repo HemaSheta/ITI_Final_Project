@@ -25,6 +25,13 @@ namespace Training_Managment_System.Repositories.Implementations
                 .Where(predicate)
                 .ToListAsync();
         }
+        public async Task<Course?> GetCourseWithInstructor(int id)
+        {
+            return await _context.Courses
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.CourseId == id);
+        }
+
 
 
     }

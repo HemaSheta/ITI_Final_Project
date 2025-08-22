@@ -126,7 +126,7 @@ namespace Training_Managment_System.Controllers
         // GET: Course/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var course = await _unitOfWork.course.GetById(id);
+            var course = await _unitOfWork.course.GetCourseWithInstructor(id);
             if (course == null)
                 return NotFound();
 
@@ -137,7 +137,8 @@ namespace Training_Managment_System.Controllers
                 CourseId = course.CourseId,
                 CourseName = course.CourseName,
                 Category = course.Category,
-                InstructorId = course.InstructorID
+                InstructorId = course.InstructorID,
+                InstructorName = course.User != null ? course.User.UserName : "N/A"
             };
 
             return View(viewModel);
