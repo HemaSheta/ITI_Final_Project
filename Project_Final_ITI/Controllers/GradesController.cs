@@ -22,7 +22,7 @@ namespace Training_Managment_System.Controllers
         // GET: /Grade/Details/id
         public async Task<ActionResult> Details(int id)
         {
-            var grade = await _unitOfWork.grade.GetById(id);
+            var grade = await _unitOfWork.grade.GetByIdWithIncludesAsync(id);
             if (grade == null) return NotFound();
             return View(grade);
         }
