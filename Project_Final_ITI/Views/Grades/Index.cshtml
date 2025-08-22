@@ -47,6 +47,14 @@
                                        class="btn btn-sm btn-info">
                                         <i class="bi bi-eye"></i> Details
                                     </a>
+                                    <a asp-controller="Grades" asp-action="Edit" asp-route-id="@grade.GradeId"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a asp-controller="Grades" asp-action="Delete" asp-route-id="@grade.GradeId"
+                                       class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a>
                                 </td>
                             </tr>
                         }
