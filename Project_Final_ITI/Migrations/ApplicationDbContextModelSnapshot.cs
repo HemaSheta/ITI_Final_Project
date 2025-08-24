@@ -50,15 +50,6 @@ namespace Training_Managment_System.Migrations
                     b.HasIndex("InstructorID");
 
                     b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            CourseId = 1,
-                            Category = "Programming",
-                            CourseName = "C# Programming",
-                            InstructorID = 1
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Enrollment", b =>
@@ -74,13 +65,6 @@ namespace Training_Managment_System.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Enrollments");
-
-                    b.HasData(
-                        new
-                        {
-                            StudentId = 2,
-                            CourseId = 1
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Grade", b =>
@@ -131,22 +115,6 @@ namespace Training_Managment_System.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Sessions");
-
-                    b.HasData(
-                        new
-                        {
-                            SessionId = 1,
-                            CourseId = 1,
-                            EndDate = new DateTime(2025, 9, 9, 0, 0, 0, 0, DateTimeKind.Local),
-                            StartDate = new DateTime(2025, 8, 30, 0, 0, 0, 0, DateTimeKind.Local)
-                        },
-                        new
-                        {
-                            SessionId = 2,
-                            CourseId = 2,
-                            EndDate = new DateTime(2025, 9, 19, 0, 0, 0, 0, DateTimeKind.Local),
-                            StartDate = new DateTime(2025, 9, 4, 0, 0, 0, 0, DateTimeKind.Local)
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.User", b =>
@@ -173,22 +141,6 @@ namespace Training_Managment_System.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            Email = "ahmed@iti.com",
-                            Role = "Instructor",
-                            UserName = "Dr. Ahmed"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Email = "sara@student.com",
-                            Role = "Trainee",
-                            UserName = "Sara Ali"
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Course", b =>

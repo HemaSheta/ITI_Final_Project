@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Training_Managment_System.ViewModels
 {
-    public class SessionViewModel
+    public class SessionViewModel : IValidatableObject
     {
-
         public int? SessionId { get; set; }
 
         [Required]
@@ -17,5 +17,23 @@ namespace Training_Managment_System.ViewModels
         [Required(ErrorMessage = "End date is required")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
+
+        // Custom validation rules
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (StartDate < DateTime.Today)
+            {
+                yield return new ValidationResult(
+                    "Start date cannot be in the past",
+                    new[] { nameof(StartDate) });
+            }
+
+            if (EndDate <= StartDate)
+            {
+                yield return new ValidationResult(
+                    "End date must be after the start date",
+                    new[] { nameof(EndDate) });
+            }
+        }
     }
 }

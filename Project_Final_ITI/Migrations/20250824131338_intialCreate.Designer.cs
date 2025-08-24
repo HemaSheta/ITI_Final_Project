@@ -12,8 +12,8 @@ using Project_Final_ITI.Data;
 namespace Training_Managment_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250819145717_CourseNameUnique")]
-    partial class CourseNameUnique
+    [Migration("20250824131338_intialCreate")]
+    partial class intialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,15 +53,6 @@ namespace Training_Managment_System.Migrations
                     b.HasIndex("InstructorID");
 
                     b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            CourseId = 1,
-                            Category = "Programming",
-                            CourseName = "C# Programming",
-                            InstructorID = 1
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Enrollment", b =>
@@ -77,13 +68,6 @@ namespace Training_Managment_System.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Enrollments");
-
-                    b.HasData(
-                        new
-                        {
-                            StudentId = 2,
-                            CourseId = 1
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Grade", b =>
@@ -160,22 +144,6 @@ namespace Training_Managment_System.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            Email = "ahmed@iti.com",
-                            Role = "Instructor",
-                            UserName = "Dr. Ahmed"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Email = "sara@student.com",
-                            Role = "Trainee",
-                            UserName = "Sara Ali"
-                        });
                 });
 
             modelBuilder.Entity("Project_Final_ITI.Models.Course", b =>

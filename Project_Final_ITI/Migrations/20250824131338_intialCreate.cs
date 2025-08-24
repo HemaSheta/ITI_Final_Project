@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Training_Managment_System.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class intialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -118,6 +118,12 @@ namespace Training_Managment_System.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_CourseName",
+                table: "Courses",
+                column: "CourseName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_InstructorID",
